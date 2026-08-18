@@ -1,24 +1,545 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { LeafDivider, LeafMark, Logo } from "@/components/Leaf";
+import { useReveal } from "@/hooks/use-reveal";
+import { branches, dishes, reviews, t, type Lang } from "@/lib/content";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import interior from "@/assets/greyseed-interior.png.asset.json";
+import ribeye from "@/assets/ribeye.jpg.asset.json";
+import burger from "@/assets/burger.jpg.asset.json";
+import salmon from "@/assets/salmon.jpg.asset.json";
+import steaksalad from "@/assets/steaksalad.jpg.asset.json";
+import platter from "@/assets/platter.jpg.asset.json";
+import beetroot from "@/assets/beetroot.jpg.asset.json";
+import wine from "@/assets/wine.jpg.asset.json";
+import dining from "@/assets/dining.jpg.asset.json";
+import bar from "@/assets/bar.jpg.asset.json";
+import plants from "@/assets/plants.jpg.asset.json";
+
+const dishImg: Record<string, string> = {
+  ribeye: ribeye.url,
+  burger: burger.url,
+  salmon: salmon.url,
+  steaksalad: steaksalad.url,
+  platter: platter.url,
+  beetroot: beetroot.url,
+};
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "GREYSEED — Дэлхийн амтыг нэг дор | Улаанбаатар" },
+      {
+        name: "description",
+        content:
+          "GREYSEED — Улаанбаатарын casual dining & lifestyle ресторан. Дэлхийн амтат цэс, өдөр бүр 12:00–23:00. 2 салбар: GREYSEED 100, GREYSEED MINISTER.",
+      },
+      { property: "og:title", content: "GREYSEED — Дэлхийн амтыг нэг дор" },
+      {
+        property: "og:description",
+        content:
+          "Globally inspired dining, all day. Two branches in Ulaanbaatar, open daily 12:00–23:00.",
+      },
+      { property: "og:type", content: "restaurant.restaurant" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Stars() {
   return (
+    <span className="flex gap-0.5" aria-label="5 / 5">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <svg key={i} viewBox="0 0 20 20" className="h-4 w-4 fill-gold" aria-hidden="true">
+          <path d="M10 1.6l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.6 4.9 17.3l1-5.7-4.1-4 5.7-.8z" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+function SectionHead({
+  kicker,
+  title,
+  light = false,
+}: {
+  kicker: string;
+  title: string;
+  light?: boolean;
+}) {
+  return (
+    <div data-reveal className="reveal mx-auto max-w-2xl text-center">
+      <p
+        className={`text-[11px] font-semibold uppercase tracking-[0.28em] ${light ? "text-gold" : "text-gold"}`}
+      >
+        {kicker}
+      </p>
+      <h2
+        className={`mt-3 text-3xl leading-tight sm:text-4xl ${light ? "text-cream" : "text-navy"}`}
+      >
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+function Index() {
+  const [lang, setLang] = useState<Lang>("mn");
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useReveal();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const L = <T extends { mn: string; en: string }>(o: T) => o[lang];
+  const navItems = [
+    { id: "about", label: L(t.nav.about) },
+    { id: "dishes", label: L(t.nav.dishes) },
+    { id: "reviews", label: L(t.nav.reviews) },
+    { id: "gallery", label: L(t.nav.gallery) },
+    { id: "locations", label: L(t.nav.locations) },
+  ];
+
+  const LangToggle = ({ dark = false }: { dark?: boolean }) => (
     <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
+      className={`flex shrink-0 items-center rounded-full border p-0.5 text-[11px] font-semibold tracking-widest ${
+        dark ? "border-cream/25 text-cream/80" : "border-navy/20 text-navy/70"
+      }`}
     >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+      {(["mn", "en"] as const).map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          aria-pressed={lang === l}
+          className={`min-h-[32px] rounded-full px-3 transition-colors ${
+            lang === l ? "bg-gold text-navy-deep" : "hover:opacity-80"
+          }`}
+        >
+          {l === "mn" ? "МОН" : "EN"}
+        </button>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* NAV */}
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+          scrolled || open ? "bg-navy-deep/95 backdrop-blur-md" : "bg-transparent"
+        }`}
+      >
+        <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-6">
+          <a href="#top" className="min-w-0 text-cream">
+            <Logo />
+          </a>
+          <div className="flex items-center gap-2">
+            <nav className="hidden items-center gap-7 lg:flex">
+              {navItems.map((n) => (
+                <a
+                  key={n.id}
+                  href={`#${n.id}`}
+                  className="text-sm text-cream/85 transition-colors hover:text-gold"
+                >
+                  {n.label}
+                </a>
+              ))}
+            </nav>
+            <LangToggle dark />
+            <button
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Menu"
+              aria-expanded={open}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-cream/25 text-cream lg:hidden"
+            >
+              <span className="relative block h-3.5 w-5">
+                <span
+                  className={`absolute inset-x-0 top-0 h-0.5 bg-current transition-transform ${open ? "translate-y-1.5 rotate-45" : ""}`}
+                />
+                <span
+                  className={`absolute inset-x-0 top-1.5 h-0.5 bg-current transition-opacity ${open ? "opacity-0" : ""}`}
+                />
+                <span
+                  className={`absolute inset-x-0 top-3 h-0.5 bg-current transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+        {open && (
+          <nav className="border-t border-cream/10 lg:hidden">
+            <ul className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
+              {navItems.map((n) => (
+                <li key={n.id}>
+                  <a
+                    href={`#${n.id}`}
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-[48px] items-center border-b border-cream/10 text-cream/90"
+                  >
+                    {n.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </header>
+
+      {/* HERO */}
+      <section id="top" className="relative min-h-[92svh] overflow-hidden">
+        <img
+          src={interior.url}
+          alt={
+            lang === "mn"
+              ? "GREYSEED рестораны дотоод орчин"
+              : "GREYSEED restaurant interior at night"
+          }
+          className="absolute inset-0 h-full w-full object-cover object-[62%_center] sm:object-center"
+          fetchPriority="high"
+        />
+        <div className="hero-overlay absolute inset-0" />
+        <div className="relative mx-auto flex min-h-[92svh] max-w-6xl flex-col justify-end px-5 pb-32 pt-28 sm:px-6 sm:pb-36 lg:justify-center lg:pb-28">
+          <div className="max-w-xl">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+              {L(t.hero.eyebrow)}
+            </p>
+            <h1 className="mt-4 text-4xl leading-[1.1] text-cream sm:text-5xl lg:text-6xl">
+              {L(t.hero.title)}
+            </h1>
+            <p className="mt-4 text-base text-cream/80 sm:text-lg">{L(t.hero.sub)}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#dishes"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-8 text-sm font-semibold tracking-wide text-navy-deep transition-transform active:scale-[0.98]"
+              >
+                {L(t.hero.menu)}
+              </a>
+              <a
+                href="#reserve"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-cream/40 px-8 text-sm font-semibold tracking-wide text-cream transition-colors hover:bg-cream/10"
+              >
+                {L(t.hero.reserve)}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="px-5 py-20 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHead kicker={L(t.about.kicker)} title={L(t.about.title)} />
+          <p
+            data-reveal
+            className="reveal mx-auto mt-6 max-w-2xl text-center text-[15px] leading-relaxed text-muted-foreground sm:text-base"
+          >
+            {L(t.about.body)}
+          </p>
+          <ul
+            data-reveal
+            className="reveal mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-center"
+          >
+            {t.about.stats.map((s) => (
+              <li key={s.v} className="rounded-xl border border-border bg-card px-2 py-5">
+                <p className="font-serif text-lg text-navy sm:text-xl">{s.v}</p>
+                <p className="mt-1 text-[11px] uppercase tracking-wider text-muted-foreground">
+                  {L(s.l)}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <div
+            data-reveal
+            className="reveal no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0"
+          >
+            {[
+              { src: dining.url, alt: lang === "mn" ? "Хоолны танхим" : "Dining area" },
+              { src: bar.url, alt: lang === "mn" ? "Бар" : "Bar counter" },
+              { src: plants.url, alt: lang === "mn" ? "Ногоон хана" : "Plant wall" },
+            ].map((img) => (
+              <figure
+                key={img.src}
+                className="relative w-[78vw] shrink-0 snap-center overflow-hidden rounded-2xl sm:w-auto"
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  className="h-56 w-full object-cover sm:h-64"
+                />
+                <span className="absolute inset-0 bg-navy-deep/20" />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <LeafDivider />
+
+      {/* DISHES */}
+      <section id="dishes" className="px-5 py-20 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHead kicker={L(t.dishes.kicker)} title={L(t.dishes.title)} />
+          <div
+            data-reveal
+            className="reveal no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-3"
+          >
+            {dishes.map((d) => (
+              <article
+                key={d.en}
+                className="shadow-card-soft w-[74vw] shrink-0 snap-center overflow-hidden rounded-2xl bg-card sm:w-auto"
+              >
+                <img
+                  src={dishImg[d.img]}
+                  alt={lang === "mn" ? d.mn : d.en}
+                  loading="lazy"
+                  width={900}
+                  height={1100}
+                  className="h-56 w-full object-cover sm:h-64"
+                />
+                <div className="p-5">
+                  <h3 className="text-lg text-navy">{lang === "mn" ? d.mn : d.en}</h3>
+                  <p className="mt-0.5 text-xs uppercase tracking-widest text-muted-foreground">
+                    {lang === "mn" ? d.en : d.mn}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {lang === "mn" ? d.descMn : d.descEn}
+                  </p>
+                  <p className="mt-4 font-serif text-base text-gold">{d.price}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div data-reveal className="reveal mt-10 text-center">
+            <a
+              href="#locations"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-navy px-8 text-sm font-semibold tracking-wide text-primary-foreground"
+            >
+              {L(t.dishes.cta)}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* REVIEWS */}
+      <section id="reviews" className="bg-navy-deep px-5 py-20 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHead kicker={L(t.reviews.kicker)} title={L(t.reviews.title)} light />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2">
+            {reviews.map((r) => (
+              <article
+                key={r.name}
+                data-reveal
+                className="reveal rounded-2xl bg-cream/95 p-5 sm:p-6"
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-navy font-serif text-sm text-cream">
+                    {r.name.charAt(0).toUpperCase()}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-navy">{r.name}</p>
+                    {r.guide && (
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">
+                        <span className="rounded-full bg-secondary px-2 py-0.5 text-secondary-foreground">
+                          {L(t.reviews.localGuide)}
+                        </span>{" "}
+                        · {r.count} {lang === "mn" ? "үнэлгээ" : "reviews"}
+                      </p>
+                    )}
+                  </div>
+                  <LeafMark className="h-5 w-5 shrink-0 text-gold" />
+                </div>
+                <div className="mt-4 flex items-center gap-2">
+                  <Stars />
+                  <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                    {L(t.reviews.source)}
+                  </span>
+                </div>
+                <p className="mt-3 text-[15px] leading-relaxed text-foreground">
+                  {lang === "mn" ? r.mn : r.en}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* GALLERY */}
+      <section id="gallery" className="px-5 py-20 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHead kicker={L(t.gallery.kicker)} title={L(t.gallery.title)} />
+          <div
+            data-reveal
+            className="reveal no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0"
+          >
+            {[
+              { src: wine.url, alt: lang === "mn" ? "Дарсны хана" : "Wine wall", tall: true },
+              { src: interior.url, alt: lang === "mn" ? "Үүдний танхим" : "Entrance", tall: false },
+              { src: dining.url, alt: lang === "mn" ? "Хоолны танхим" : "Dining room", tall: false },
+              { src: plants.url, alt: lang === "mn" ? "Ногоон хана" : "Plant wall", tall: true },
+              { src: bar.url, alt: lang === "mn" ? "Бар" : "Bar", tall: false },
+            ].map((g, i) => (
+              <figure
+                key={i}
+                className={`relative w-[72vw] shrink-0 snap-center overflow-hidden rounded-2xl sm:w-auto ${
+                  g.tall ? "sm:row-span-2" : ""
+                }`}
+              >
+                <img
+                  src={g.src}
+                  alt={g.alt}
+                  loading="lazy"
+                  className={`w-full object-cover ${g.tall ? "h-64 sm:h-full sm:min-h-[22rem]" : "h-64 sm:h-44"}`}
+                />
+                <span className="absolute inset-0 bg-navy-deep/25" />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <LeafDivider />
+
+      {/* LOCATIONS */}
+      <section id="locations" className="px-5 py-20 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHead kicker={L(t.locations.kicker)} title={L(t.locations.title)} />
+          <div className="mt-12 grid gap-5 lg:grid-cols-2">
+            {branches.map((b) => (
+              <article
+                key={b.name}
+                data-reveal
+                className="reveal rounded-2xl border border-border bg-card p-6"
+              >
+                <h3 className="font-serif text-xl tracking-[0.12em] text-navy">{b.name}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {lang === "mn" ? b.addrMn : b.addrEn}
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">{L(t.locations.hours)}</p>
+                <a
+                  href={`tel:${b.tel}`}
+                  className="mt-5 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-navy px-6 text-sm font-semibold text-primary-foreground sm:w-auto"
+                >
+                  ☎ {b.phone} · {L(t.locations.call)}
+                </a>
+              </article>
+            ))}
+          </div>
+          <p
+            data-reveal
+            className="reveal mt-6 rounded-xl border border-gold/40 bg-secondary/60 px-5 py-4 text-center text-sm text-secondary-foreground"
+          >
+            {L(t.locations.vip)}
+          </p>
+        </div>
+      </section>
+
+      {/* RESERVE */}
+      <section id="reserve" className="bg-navy px-5 py-20 sm:px-6 sm:py-24">
+        <div data-reveal className="reveal mx-auto max-w-3xl text-center">
+          <LeafMark className="mx-auto h-8 w-8 text-gold" />
+          <h2 className="mt-5 text-3xl text-cream sm:text-4xl">{L(t.reserve.title)}</h2>
+          <p className="mt-3 text-cream/75">{L(t.reserve.sub)}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            {branches.map((b) => (
+              <a
+                key={b.name}
+                href={`tel:${b.tel}`}
+                className="inline-flex min-h-[56px] flex-col items-center justify-center rounded-2xl bg-gold px-8 py-2 text-navy-deep transition-transform active:scale-[0.98]"
+              >
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em]">
+                  {b.name}
+                </span>
+                <span className="font-serif text-lg">☎ {b.phone}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-navy-deep px-5 pb-28 pt-16 text-cream/80 sm:px-6 sm:pb-16">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr_auto]">
+            <div>
+              <Logo className="text-cream" />
+              <p className="mt-4 font-serif text-lg text-gold">{L(t.footer.tagline)}</p>
+              <p className="mt-2 text-sm">{L(t.locations.hours)}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-gold">
+                {L(t.footer.links)}
+              </p>
+              <ul className="mt-4 space-y-1">
+                {navItems.map((n) => (
+                  <li key={n.id}>
+                    <a
+                      href={`#${n.id}`}
+                      className="flex min-h-[44px] items-center text-sm hover:text-gold"
+                    >
+                      {n.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex flex-col items-start gap-4">
+              <div className="flex gap-3">
+                {[
+                  {
+                    label: "Facebook",
+                    d: "M13 22v-8h3l1-4h-4V8c0-1.1.3-1.8 1.9-1.8H17V2.6C16.6 2.6 15.4 2.5 14 2.5c-2.9 0-4.9 1.8-4.9 5V10H6v4h3.1v8H13Z",
+                  },
+                  {
+                    label: "Instagram",
+                    d: "M12 7.4A4.6 4.6 0 1 0 12 16.6 4.6 4.6 0 0 0 12 7.4Zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm5.9-7.8a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0ZM7.5 3h9A4.5 4.5 0 0 1 21 7.5v9a4.5 4.5 0 0 1-4.5 4.5h-9A4.5 4.5 0 0 1 3 16.5v-9A4.5 4.5 0 0 1 7.5 3Zm0 1.8A2.7 2.7 0 0 0 4.8 7.5v9a2.7 2.7 0 0 0 2.7 2.7h9a2.7 2.7 0 0 0 2.7-2.7v-9a2.7 2.7 0 0 0-2.7-2.7h-9Z",
+                  },
+                ].map((s) => (
+                  <a
+                    key={s.label}
+                    href="#top"
+                    aria-label={s.label}
+                    className="grid h-11 w-11 place-items-center rounded-full border border-cream/20 hover:border-gold hover:text-gold"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden="true">
+                      <path d={s.d} />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+              <LangToggle dark />
+            </div>
+          </div>
+          <p className="mt-12 border-t border-cream/10 pt-6 text-center text-xs text-cream/50">
+            © {new Date().getFullYear()} GREYSEED. {L(t.footer.rights)}
+          </p>
+        </div>
+      </footer>
+
+      {/* STICKY MOBILE BAR */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-cream/10 bg-navy-deep/95 px-4 py-3 backdrop-blur-md sm:hidden">
+        <div className="grid grid-cols-2 gap-3">
+          <a
+            href="#reserve"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold text-sm font-semibold text-navy-deep"
+          >
+            {L(t.hero.reserve)}
+          </a>
+          <a
+            href="#dishes"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-cream/35 text-sm font-semibold text-cream"
+          >
+            {L(t.hero.menu)}
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
