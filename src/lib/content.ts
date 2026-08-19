@@ -158,6 +158,7 @@ export const branches = [
     addrEn: "Khuukhdiin 100, east side of Naran store",
     phone: "7717-2323",
     tel: "+97677172323",
+    map: "GREYSEED restaurant Khuukhdiin 100 Naran store Ulaanbaatar",
   },
   {
     name: "GREYSEED MINISTER",
@@ -165,5 +166,7 @@ export const branches = [
     addrEn: "Minister Tower, 3rd floor, use the front lift",
     phone: "7703-2828",
     tel: "+97677032828",
+    map: "GREYSEED Minister Tower Ulaanbaatar",
   },
 ] as const;
+
