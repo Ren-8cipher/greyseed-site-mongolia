@@ -214,19 +214,20 @@ function Index() {
             </h1>
             <p className="mt-4 text-base text-cream/80 sm:text-lg">{L(t.hero.sub)}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#dishes"
+              <Link
+                to="/menu"
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-8 text-sm font-semibold tracking-wide text-navy-deep transition-transform active:scale-[0.98]"
               >
                 {L(t.hero.menu)}
-              </a>
-              <a
-                href="#reserve"
+              </Link>
+              <Link
+                to="/reserve"
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-cream/40 px-8 text-sm font-semibold tracking-wide text-cream transition-colors hover:bg-cream/10"
               >
                 {L(t.hero.reserve)}
-              </a>
+              </Link>
             </div>
+
           </div>
         </div>
       </section>
@@ -318,13 +319,14 @@ function Index() {
             ))}
           </div>
           <div data-reveal className="reveal mt-10 text-center">
-            <a
-              href="#locations"
+            <Link
+              to="/menu"
               className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-navy px-8 text-sm font-semibold tracking-wide text-primary-foreground"
             >
               {L(t.dishes.cta)}
-            </a>
+            </Link>
           </div>
+
         </div>
       </section>
 
@@ -372,9 +374,10 @@ function Index() {
       </section>
 
       {/* GALLERY */}
-      <section id="gallery" className="px-5 py-20 sm:px-6 sm:py-24">
+      <section id="gallery" className="bg-navy-deep px-5 py-20 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
-          <SectionHead kicker={L(t.gallery.kicker)} title={L(t.gallery.title)} />
+          <SectionHead kicker={L(t.gallery.kicker)} title={L(t.gallery.title)} light />
+
           <div
             data-reveal
             className="reveal no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0"
@@ -398,7 +401,8 @@ function Index() {
                   loading="lazy"
                   className={`w-full object-cover ${g.tall ? "h-64 sm:h-full sm:min-h-[22rem]" : "h-64 sm:h-44"}`}
                 />
-                <span className="absolute inset-0 bg-navy-deep/25" />
+                <span className="absolute inset-0 ring-1 ring-inset ring-cream/10" />
+
               </figure>
             ))}
           </div>
@@ -411,27 +415,47 @@ function Index() {
       <section id="locations" className="px-5 py-20 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHead kicker={L(t.locations.kicker)} title={L(t.locations.title)} />
-          <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
             {branches.map((b) => (
               <article
                 key={b.name}
                 data-reveal
-                className="reveal rounded-2xl border border-border bg-card p-6"
+                className="reveal overflow-hidden rounded-2xl border border-border bg-card"
               >
-                <h3 className="font-serif text-xl tracking-[0.12em] text-navy">{b.name}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {lang === "mn" ? b.addrMn : b.addrEn}
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">{L(t.locations.hours)}</p>
-                <a
-                  href={`tel:${b.tel}`}
-                  className="mt-5 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-navy px-6 text-sm font-semibold text-primary-foreground sm:w-auto"
-                >
-                  ☎ {b.phone} · {L(t.locations.call)}
-                </a>
+                <iframe
+                  title={`${b.name} — Google Maps`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(b.map)}&hl=${lang}&z=16&output=embed`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="h-56 w-full border-0 sm:h-64"
+                />
+                <div className="p-6">
+                  <h3 className="font-serif text-xl tracking-[0.12em] text-navy">{b.name}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {lang === "mn" ? b.addrMn : b.addrEn}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">{L(t.locations.hours)}</p>
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                    <a
+                      href={`tel:${b.tel}`}
+                      className="inline-flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full bg-navy px-6 text-sm font-semibold text-primary-foreground"
+                    >
+                      ☎ {b.phone} · {L(t.locations.call)}
+                    </a>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.map)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full border border-border px-6 text-sm font-semibold text-navy"
+                    >
+                      {lang === "mn" ? "Замын заавар" : "Get directions"}
+                    </a>
+                  </div>
+                </div>
               </article>
             ))}
           </div>
+
           <p
             data-reveal
             className="reveal mt-6 rounded-xl border border-gold/40 bg-secondary/60 px-5 py-4 text-center text-sm text-secondary-foreground"
@@ -447,12 +471,18 @@ function Index() {
           <LeafMark className="mx-auto h-8 w-8 text-gold" />
           <h2 className="mt-5 text-3xl text-cream sm:text-4xl">{L(t.reserve.title)}</h2>
           <p className="mt-3 text-cream/75">{L(t.reserve.sub)}</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Link
+            to="/reserve"
+            className="mt-8 inline-flex min-h-[56px] items-center justify-center rounded-full bg-gold px-10 text-sm font-semibold tracking-wide text-navy-deep transition-transform active:scale-[0.98]"
+          >
+            {L(t.hero.reserve)}
+          </Link>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             {branches.map((b) => (
               <a
                 key={b.name}
                 href={`tel:${b.tel}`}
-                className="inline-flex min-h-[56px] flex-col items-center justify-center rounded-2xl bg-gold px-8 py-2 text-navy-deep transition-transform active:scale-[0.98]"
+                className="inline-flex min-h-[56px] flex-col items-center justify-center rounded-2xl border border-cream/25 px-8 py-2 text-cream transition-colors hover:border-gold"
               >
                 <span className="text-[11px] font-semibold uppercase tracking-[0.2em]">
                   {b.name}
@@ -464,82 +494,10 @@ function Index() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-navy-deep px-5 pb-28 pt-16 text-cream/80 sm:px-6 sm:pb-16">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr_auto]">
-            <div>
-              <Logo className="text-cream" />
-              <p className="mt-4 font-serif text-lg text-gold">{L(t.footer.tagline)}</p>
-              <p className="mt-2 text-sm">{L(t.locations.hours)}</p>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-gold">
-                {L(t.footer.links)}
-              </p>
-              <ul className="mt-4 space-y-1">
-                {navItems.map((n) => (
-                  <li key={n.id}>
-                    <a
-                      href={`#${n.id}`}
-                      className="flex min-h-[44px] items-center text-sm hover:text-gold"
-                    >
-                      {n.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex flex-col items-start gap-4">
-              <div className="flex gap-3">
-                {[
-                  {
-                    label: "Facebook",
-                    d: "M13 22v-8h3l1-4h-4V8c0-1.1.3-1.8 1.9-1.8H17V2.6C16.6 2.6 15.4 2.5 14 2.5c-2.9 0-4.9 1.8-4.9 5V10H6v4h3.1v8H13Z",
-                  },
-                  {
-                    label: "Instagram",
-                    d: "M12 7.4A4.6 4.6 0 1 0 12 16.6 4.6 4.6 0 0 0 12 7.4Zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm5.9-7.8a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0ZM7.5 3h9A4.5 4.5 0 0 1 21 7.5v9a4.5 4.5 0 0 1-4.5 4.5h-9A4.5 4.5 0 0 1 3 16.5v-9A4.5 4.5 0 0 1 7.5 3Zm0 1.8A2.7 2.7 0 0 0 4.8 7.5v9a2.7 2.7 0 0 0 2.7 2.7h9a2.7 2.7 0 0 0 2.7-2.7v-9a2.7 2.7 0 0 0-2.7-2.7h-9Z",
-                  },
-                ].map((s) => (
-                  <a
-                    key={s.label}
-                    href="#top"
-                    aria-label={s.label}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-cream/20 hover:border-gold hover:text-gold"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden="true">
-                      <path d={s.d} />
-                    </svg>
-                  </a>
-                ))}
-              </div>
-              <LangToggle dark />
-            </div>
-          </div>
-          <p className="mt-12 border-t border-cream/10 pt-6 text-center text-xs text-cream/50">
-            © {new Date().getFullYear()} GREYSEED. {L(t.footer.rights)}
-          </p>
-        </div>
-      </footer>
 
-      {/* STICKY MOBILE BAR */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-cream/10 bg-navy-deep/95 px-4 py-3 backdrop-blur-md sm:hidden">
-        <div className="grid grid-cols-2 gap-3">
-          <a
-            href="#reserve"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold text-sm font-semibold text-navy-deep"
-          >
-            {L(t.hero.reserve)}
-          </a>
-          <a
-            href="#dishes"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-cream/35 text-sm font-semibold text-cream"
-          >
-            {L(t.hero.menu)}
-          </a>
-        </div>
-      </div>
+      <SiteFooter />
+      <MobileBar />
+
     </div>
   );
 }
