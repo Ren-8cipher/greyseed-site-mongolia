@@ -52,7 +52,7 @@ function ReservePage() {
   const { lang } = useLang();
   const mn = lang === "mn";
 
-  const [branch, setBranch] = useState(branches[0].name);
+  const [branch, setBranch] = useState<string>(branches[0].name);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState("19:00");
   const [guests, setGuests] = useState(2);
