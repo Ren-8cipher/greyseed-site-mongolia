@@ -7,6 +7,8 @@ export const t = {
     reviews: { mn: "Сэтгэгдэл", en: "Reviews" },
     gallery: { mn: "Галерей", en: "Gallery" },
     locations: { mn: "Салбарууд", en: "Locations" },
+    menu: { mn: "Цэс", en: "Menu" },
+
   },
   hero: {
     eyebrow: { mn: "Улаанбаатар · 2 салбар", en: "Ulaanbaatar · 2 branches" },
