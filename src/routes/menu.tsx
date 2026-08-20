@@ -75,8 +75,8 @@ function MenuPage() {
               onClick={() => setActive(c.id)}
               className={`min-h-[40px] shrink-0 rounded-full border px-4 text-sm transition-colors ${
                 active === c.id
-                  ? "border-navy bg-navy text-primary-foreground"
-                  : "border-border text-muted-foreground hover:border-navy/40"
+                  ? "border-gold bg-gold text-navy-deep"
+                  : "border-border text-muted-foreground hover:border-gold/40"
               }`}
             >
               {lang === "mn" ? c.mn : c.en}
@@ -90,7 +90,7 @@ function MenuPage() {
           {shown.map((cat) => (
             <div key={cat.id} className="mb-14 last:mb-0">
               <div className="flex items-baseline justify-between gap-4 border-b border-gold/40 pb-3">
-                <h2 className="text-2xl text-navy sm:text-3xl">{lang === "mn" ? cat.mn : cat.en}</h2>
+                <h2 className="text-2xl text-cream sm:text-3xl">{lang === "mn" ? cat.mn : cat.en}</h2>
                 <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
                   {lang === "mn" ? cat.en : cat.mn}
                 </span>
@@ -102,7 +102,7 @@ function MenuPage() {
                     className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4"
                   >
                     <div className="min-w-0">
-                      <p className="flex flex-wrap items-center gap-2 text-base font-semibold text-navy">
+                      <p className="flex flex-wrap items-center gap-2 text-base font-semibold text-foreground">
                         {item.n && <span className="text-muted-foreground">{item.n}/</span>}
                         {lang === "mn" ? item.mn : item.en}
                         {item.note === "spicy" && (
@@ -139,7 +139,7 @@ function MenuPage() {
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
             <LeafMark className="mx-auto h-7 w-7 text-gold" />
-            <h2 className="mt-4 text-2xl text-navy sm:text-3xl">
+            <h2 className="mt-4 text-2xl text-cream sm:text-3xl">
               {lang === "mn" ? "Хэвлэмэл цэс" : "The printed menu"}
             </h2>
           </div>

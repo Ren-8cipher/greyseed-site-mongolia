@@ -8,7 +8,7 @@ export const t = {
     gallery: { mn: "Галерей", en: "Gallery" },
     locations: { mn: "Салбарууд", en: "Locations" },
     menu: { mn: "Цэс", en: "Menu" },
-
+    careers: { mn: "Ажлын байр", en: "Careers" },
   },
   hero: {
     eyebrow: { mn: "Улаанбаатар · 2 салбар", en: "Ulaanbaatar · 2 branches" },
@@ -40,6 +40,12 @@ export const t = {
     title: { mn: "Үйлчлүүлэгчдийн сэтгэгдэл", en: "What our guests say" },
     source: { mn: "Google-ээс", en: "via Google" },
     localGuide: { mn: "Local Guide", en: "Local Guide" },
+    write: { mn: "Сэтгэгдэл бичих", en: "Write a review" },
+    name: { mn: "Таны нэр", en: "Your name" },
+    rating: { mn: "Үнэлгээ", en: "Rating" },
+    comment: { mn: "Сэтгэгдэл", en: "Comment" },
+    send: { mn: "Илгээх", en: "Send" },
+    sent: { mn: "Баярлалаа! Сэтгэгдлийг хүлээн авлаа.", en: "Thank you! Your review has been received." },
   },
   gallery: {
     kicker: { mn: "Галерей", en: "Gallery" },
@@ -61,6 +67,45 @@ export const t = {
       mn: "Хүссэн салбар руугаа шууд залгаад ширээгээ баталгаажуулаарай.",
       en: "Call your preferred branch directly to confirm your table.",
     },
+  },
+  careers: {
+    kicker: { mn: "Ажлын байр", en: "Careers" },
+    title: { mn: "Бидний багт нэгдээрэй", en: "Join our team" },
+    sub: {
+      mn: "GREYSEED-д өөрийн ур чадвараа харуулах ажлын байрыг сонирхож байвал анкетаа илгээнэ үү.",
+      en: "Interested in a role where you can show your skills? Send us your application.",
+    },
+    name: { mn: "Нэр", en: "Full name" },
+    phone: { mn: "Утас", en: "Phone" },
+    email: { mn: "И-мэйл", en: "Email" },
+    position: { mn: "Албан тушаал", en: "Position" },
+    positions: {
+      mn: ["Зөөгч", "Бармен", "Бариста", "Туслах ажилтан", "Захирал", "Бусад"],
+      en: ["Server", "Bartender", "Barista", "Kitchen Assistant", "Manager", "Other"],
+    },
+    experience: { mn: "Ажлын туршлага", en: "Work experience" },
+    availability: { mn: "Боломжтой цаг", en: "Availability" },
+    cv: { mn: "CV / Анкет хавсрах", en: "Attach CV / resume" },
+    cover: { mn: "Өөрийгөө танилцуулга / Дагалдах захидал", en: "Cover letter / introduction" },
+    requirements: { mn: "Шаардлага", en: "Requirements" },
+    reqList: {
+      mn: [
+        "18 нас хүрсэн",
+        "Монгол хэлээр чөлөөтэй, англи хэлний мэдлэгтэй бол давуу",
+        "Харилцааны өндөр чадвартай, найрсаг зантай",
+        "Багаар ажиллах чадвартай, хариуцлагатай",
+        "Хоолны салбарын туршлага давуу боловч шаардлагагүй",
+      ],
+      en: [
+        "Must be 18 years or older",
+        "Fluent Mongolian; English is a plus",
+        "Strong communication and a friendly attitude",
+        "Team player with a sense of responsibility",
+        "Restaurant experience is a plus, not required",
+      ],
+    },
+    submit: { mn: "Анкет илгээх", en: "Send application" },
+    sent: { mn: "Анкетыг хүлээн авлаа. Баярлалаа!", en: "Application received. Thank you!" },
   },
   footer: {
     tagline: { mn: "Everything GREY. Everything SEED.", en: "Everything GREY. Everything SEED." },

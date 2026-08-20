@@ -105,7 +105,7 @@ function ReservePage() {
           {done ? (
             <div className="shadow-card-soft rounded-2xl border border-gold/40 bg-card p-7 text-center">
               <LeafMark className="mx-auto h-8 w-8 text-gold" />
-              <h2 className="mt-4 text-2xl text-navy">
+              <h2 className="mt-4 text-2xl text-foreground">
                 {mn ? "Захиалга хүлээн авлаа" : "Request received"}
               </h2>
               <p className="mt-3 text-sm text-muted-foreground">
@@ -125,7 +125,7 @@ function ReservePage() {
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-4 border-b border-border pb-2">
                     <dt className="text-muted-foreground">{k}</dt>
-                    <dd className="text-right font-medium text-navy">{v}</dd>
+                    <dd className="text-right font-medium text-foreground">{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -138,7 +138,7 @@ function ReservePage() {
                 </a>
                 <button
                   onClick={() => setDone(false)}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-border px-8 text-sm font-semibold text-navy"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-border px-8 text-sm font-semibold text-foreground"
                 >
                   {mn ? "Захиалгаа засах" : "Edit booking"}
                 </button>
@@ -181,7 +181,7 @@ function ReservePage() {
                             : "border-border bg-card hover:border-navy/30"
                         }`}
                       >
-                        <span className="block text-sm font-semibold tracking-wide text-navy">
+                        <span className="block text-sm font-semibold tracking-wide text-foreground">
                           {b.name}
                         </span>
                         <span className="block text-xs text-muted-foreground">
@@ -202,8 +202,8 @@ function ReservePage() {
                         onClick={() => setTime(tm)}
                         className={`min-h-[44px] rounded-lg border text-sm transition-colors ${
                           time === tm
-                            ? "border-navy bg-navy text-primary-foreground"
-                            : "border-border bg-card text-muted-foreground hover:border-navy/30"
+                            ? "border-gold bg-gold text-navy-deep"
+                            : "border-border bg-card text-muted-foreground hover:border-gold/30"
                         }`}
                       >
                         {tm}
@@ -218,18 +218,18 @@ function ReservePage() {
                     <button
                       type="button"
                       onClick={() => setGuests((g) => Math.max(1, g - 1))}
-                      className="grid h-12 w-12 place-items-center rounded-full border border-border text-xl text-navy"
+                      className="grid h-12 w-12 place-items-center rounded-full border border-border text-xl text-foreground"
                       aria-label="minus"
                     >
                       −
                     </button>
-                    <span className="min-w-[3ch] text-center font-serif text-2xl text-navy">
+                    <span className="min-w-[3ch] text-center font-serif text-2xl text-foreground">
                       {guests}
                     </span>
                     <button
                       type="button"
                       onClick={() => setGuests((g) => Math.min(20, g + 1))}
-                      className="grid h-12 w-12 place-items-center rounded-full border border-border text-xl text-navy"
+                      className="grid h-12 w-12 place-items-center rounded-full border border-border text-xl text-foreground"
                       aria-label="plus"
                     >
                       +

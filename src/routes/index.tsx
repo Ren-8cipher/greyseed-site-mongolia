@@ -78,7 +78,7 @@ function SectionHead({
         {kicker}
       </p>
       <h2
-        className={`mt-3 text-3xl leading-tight sm:text-4xl ${light ? "text-cream" : "text-navy"}`}
+        className={`mt-3 text-3xl leading-tight sm:text-4xl ${light ? "text-cream" : "text-cream"}`}
       >
         {title}
       </h2>
@@ -153,7 +153,7 @@ function Index() {
           >
             {t.about.stats.map((s) => (
               <li key={s.v} className="rounded-xl border border-border bg-card px-2 py-5">
-                <p className="font-serif text-lg text-navy sm:text-xl">{s.v}</p>
+                <p className="font-serif text-lg text-foreground sm:text-xl">{s.v}</p>
                 <p className="mt-1 text-[11px] uppercase tracking-wider text-muted-foreground">
                   {L(s.l)}
                 </p>
@@ -211,7 +211,7 @@ function Index() {
                   className="h-56 w-full object-cover sm:h-64"
                 />
                 <div className="p-5">
-                  <h3 className="text-lg text-navy">{lang === "mn" ? d.mn : d.en}</h3>
+                  <h3 className="text-lg text-foreground">{lang === "mn" ? d.mn : d.en}</h3>
                   <p className="mt-0.5 text-xs uppercase tracking-widest text-muted-foreground">
                     {lang === "mn" ? d.en : d.mn}
                   </p>
@@ -226,7 +226,7 @@ function Index() {
           <div data-reveal className="reveal mt-10 text-center">
             <Link
               to="/menu"
-              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-navy px-8 text-sm font-semibold tracking-wide text-primary-foreground"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-gold px-8 text-sm font-semibold tracking-wide text-navy-deep"
             >
               {L(t.dishes.cta)}
             </Link>
@@ -279,7 +279,7 @@ function Index() {
       </section>
 
       {/* GALLERY */}
-      <section id="gallery" className="bg-navy-deep px-5 py-20 sm:px-6 sm:py-24">
+      <section id="gallery" className="bg-black px-5 py-20 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHead kicker={L(t.gallery.kicker)} title={L(t.gallery.title)} light />
 
@@ -335,7 +335,7 @@ function Index() {
                   className="h-56 w-full border-0 sm:h-64"
                 />
                 <div className="p-6">
-                  <h3 className="font-serif text-xl tracking-[0.12em] text-navy">{b.name}</h3>
+                  <h3 className="font-serif text-xl tracking-[0.12em] text-foreground">{b.name}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                     {lang === "mn" ? b.addrMn : b.addrEn}
                   </p>
@@ -343,7 +343,7 @@ function Index() {
                   <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                     <a
                       href={`tel:${b.tel}`}
-                      className="inline-flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full bg-navy px-6 text-sm font-semibold text-primary-foreground"
+                      className="inline-flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy-deep"
                     >
                       ☎ {b.phone} · {L(t.locations.call)}
                     </a>
@@ -351,7 +351,7 @@ function Index() {
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.map)}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full border border-border px-6 text-sm font-semibold text-navy"
+                      className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full border border-border px-6 text-sm font-semibold text-cream"
                     >
                       {lang === "mn" ? "Замын заавар" : "Get directions"}
                     </a>
