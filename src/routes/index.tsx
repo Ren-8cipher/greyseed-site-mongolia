@@ -1,8 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { LeafDivider, LeafMark, Logo } from "@/components/Leaf";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { LeafDivider, LeafMark } from "@/components/Leaf";
+import { MobileBar, SiteFooter, SiteHeader } from "@/components/SiteChrome";
+import { useLang } from "@/hooks/use-lang";
 import { useReveal } from "@/hooks/use-reveal";
-import { branches, dishes, reviews, t, type Lang } from "@/lib/content";
+import { branches, dishes, reviews, t } from "@/lib/content";
+
 
 import interior from "@/assets/greyseed-interior.png.asset.json";
 import ribeye from "@/assets/ribeye.jpg.asset.json";
