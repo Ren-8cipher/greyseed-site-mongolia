@@ -1,8 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { LeafDivider, LeafMark, Logo } from "@/components/Leaf";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { LeafDivider, LeafMark } from "@/components/Leaf";
+import { MobileBar, SiteFooter, SiteHeader } from "@/components/SiteChrome";
+import { useLang } from "@/hooks/use-lang";
 import { useReveal } from "@/hooks/use-reveal";
-import { branches, dishes, reviews, t, type Lang } from "@/lib/content";
+import { branches, dishes, reviews, t } from "@/lib/content";
+
 
 import interior from "@/assets/greyseed-interior.png.asset.json";
 import ribeye from "@/assets/ribeye.jpg.asset.json";
@@ -85,111 +87,14 @@ function SectionHead({
 }
 
 function Index() {
-  const [lang, setLang] = useState<Lang>("mn");
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const { lang, L } = useLang();
   useReveal();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const L = <T extends { mn: string; en: string }>(o: T) => o[lang];
-  const navItems = [
-    { id: "about", label: L(t.nav.about) },
-    { id: "dishes", label: L(t.nav.dishes) },
-    { id: "reviews", label: L(t.nav.reviews) },
-    { id: "gallery", label: L(t.nav.gallery) },
-    { id: "locations", label: L(t.nav.locations) },
-  ];
-
-  const LangToggle = ({ dark = false }: { dark?: boolean }) => (
-    <div
-      className={`flex shrink-0 items-center rounded-full border p-0.5 text-[11px] font-semibold tracking-widest ${
-        dark ? "border-cream/25 text-cream/80" : "border-navy/20 text-navy/70"
-      }`}
-    >
-      {(["mn", "en"] as const).map((l) => (
-        <button
-          key={l}
-          onClick={() => setLang(l)}
-          aria-pressed={lang === l}
-          className={`min-h-[32px] rounded-full px-3 transition-colors ${
-            lang === l ? "bg-gold text-navy-deep" : "hover:opacity-80"
-          }`}
-        >
-          {l === "mn" ? "МОН" : "EN"}
-        </button>
-      ))}
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-background">
-      {/* NAV */}
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-          scrolled || open ? "bg-navy-deep/95 backdrop-blur-md" : "bg-transparent"
-        }`}
-      >
-        <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-6">
-          <a href="#top" className="min-w-0 text-cream">
-            <Logo />
-          </a>
-          <div className="flex items-center gap-2">
-            <nav className="hidden items-center gap-7 lg:flex">
-              {navItems.map((n) => (
-                <a
-                  key={n.id}
-                  href={`#${n.id}`}
-                  className="text-sm text-cream/85 transition-colors hover:text-gold"
-                >
-                  {n.label}
-                </a>
-              ))}
-            </nav>
-            <LangToggle dark />
-            <button
-              onClick={() => setOpen((v) => !v)}
-              aria-label="Menu"
-              aria-expanded={open}
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-cream/25 text-cream lg:hidden"
-            >
-              <span className="relative block h-3.5 w-5">
-                <span
-                  className={`absolute inset-x-0 top-0 h-0.5 bg-current transition-transform ${open ? "translate-y-1.5 rotate-45" : ""}`}
-                />
-                <span
-                  className={`absolute inset-x-0 top-1.5 h-0.5 bg-current transition-opacity ${open ? "opacity-0" : ""}`}
-                />
-                <span
-                  className={`absolute inset-x-0 top-3 h-0.5 bg-current transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
-                />
-              </span>
-            </button>
-          </div>
-        </div>
-        {open && (
-          <nav className="border-t border-cream/10 lg:hidden">
-            <ul className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
-              {navItems.map((n) => (
-                <li key={n.id}>
-                  <a
-                    href={`#${n.id}`}
-                    onClick={() => setOpen(false)}
-                    className="flex min-h-[48px] items-center border-b border-cream/10 text-cream/90"
-                  >
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
-      </header>
+      <SiteHeader />
+
+
 
       {/* HERO */}
       <section id="top" className="relative min-h-[92svh] overflow-hidden">
