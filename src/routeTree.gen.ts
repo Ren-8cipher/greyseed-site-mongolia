@@ -10,12 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as MenuRouteImport } from './routes/menu'
 import { Route as ReserveRouteImport } from './routes/reserve'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MenuRoute = MenuRouteImport.update({
@@ -31,30 +43,38 @@ const ReserveRoute = ReserveRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/careers': typeof CareersRoute
   '/menu': typeof MenuRoute
   '/reserve': typeof ReserveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/careers': typeof CareersRoute
   '/menu': typeof MenuRoute
   '/reserve': typeof ReserveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/careers': typeof CareersRoute
   '/menu': typeof MenuRoute
   '/reserve': typeof ReserveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/menu' | '/reserve'
+  fullPaths: '/' | '/admin' | '/careers' | '/menu' | '/reserve'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/menu' | '/reserve'
-  id: '__root__' | '/' | '/menu' | '/reserve'
+  to: '/' | '/admin' | '/careers' | '/menu' | '/reserve'
+  id: '__root__' | '/' | '/admin' | '/careers' | '/menu' | '/reserve'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  CareersRoute: typeof CareersRoute
   MenuRoute: typeof MenuRoute
   ReserveRoute: typeof ReserveRoute
 }
@@ -66,6 +86,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/menu': {
@@ -87,6 +121,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  CareersRoute: CareersRoute,
   MenuRoute: MenuRoute,
   ReserveRoute: ReserveRoute,
 }
