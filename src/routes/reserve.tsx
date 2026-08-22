@@ -1,30 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { LeafMark } from "@/components/Leaf";
 import { MobileBar, SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { useLang } from "@/hooks/use-lang";
 import { branches } from "@/lib/content";
+import { slotsFor, useAvailability } from "@/lib/availability";
 
-const times = [
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "17:00",
-  "17:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-  "22:00",
-];
 
 export const Route = createFileRoute("/reserve")({
   head: () => ({
