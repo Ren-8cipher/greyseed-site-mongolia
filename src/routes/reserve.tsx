@@ -218,7 +218,15 @@ function ReservePage() {
                       </button>
                     ))}
                   </div>
+                  {isClosed && (
+                    <p className="mt-2 text-sm text-destructive">
+                      {mn
+                        ? "Сонгосон өдөр захиалга авахгүй. Өөр өдөр сонгоно уу."
+                        : "No slots available on this date — please pick another day."}
+                    </p>
+                  )}
                 </div>
+
 
                 <div>
                   <p className={label}>{mn ? "Зочдын тоо" : "Guests"}</p>
