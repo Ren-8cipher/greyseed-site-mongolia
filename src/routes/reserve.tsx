@@ -161,7 +161,7 @@ function ReservePage() {
                     mode="single"
                     selected={date}
                     onSelect={setDate}
-                    disabled={{ before: new Date() }}
+                    disabled={[{ before: new Date() }, ...closedDays]}
                     className="mx-auto"
                   />
                 </div>
