@@ -47,7 +47,7 @@ function ReservePage() {
 
   const chosen = branches.find((b) => b.name === branch)!;
 
-  const { availability, loaded } = useAvailability();
+  const { availability, loaded } = useAvailability(branch);
   const times = useMemo(() => slotsFor(availability, date), [availability, date]);
   const isClosed = loaded && !!date && times.length === 0;
 

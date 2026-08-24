@@ -26,6 +26,9 @@ export type Availability = {
   overrides: Record<string, string[]>;
 };
 
+/** Availability per branch name. */
+export type AvailabilityStore = Record<string, Availability>;
+
 export const EMPTY_AVAILABILITY: Availability = {
   defaultSlots: DEFAULT_SLOTS,
   overrides: {},
@@ -41,18 +44,34 @@ export function dateKey(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
-function read(): Availability {
+function normalize(value: unknown): Availability {
+  const parsed = (value ?? {}) as Partial<Availability>;
+  return {
+    defaultSlots: Array.isArray(parsed.defaultSlots) ? parsed.defaultSlots : DEFAULT_SLOTS,
+    overrides:
+      parsed.overrides && typeof parsed.overrides === "object" ? parsed.overrides : {},
+  };
+}
+
+function readStore(): AvailabilityStore {
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return EMPTY_AVAILABILITY;
-    const parsed = JSON.parse(raw) as Partial<Availability>;
-    return {
-      defaultSlots: Array.isArray(parsed.defaultSlots) ? parsed.defaultSlots : DEFAULT_SLOTS,
-      overrides: parsed.overrides && typeof parsed.overrides === "object" ? parsed.overrides : {},
-    };
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    // Legacy single-branch shape -> ignore branch keys, treat as shared base.
+    if ("defaultSlots" in parsed || "overrides" in parsed) {
+      return { __legacy: normalize(parsed) };
+    }
+    const store: AvailabilityStore = {};
+    for (const [branch, value] of Object.entries(parsed)) store[branch] = normalize(value);
+    return store;
   } catch {
-    return EMPTY_AVAILABILITY;
+    return {};
   }
+}
+
+function branchAvailability(store: AvailabilityStore, branch: string): Availability {
+  return store[branch] ?? store["__legacy"] ?? EMPTY_AVAILABILITY;
 }
 
 export function slotsFor(a: Availability, d: Date | undefined) {
@@ -61,14 +80,15 @@ export function slotsFor(a: Availability, d: Date | undefined) {
   return key in a.overrides ? (a.overrides[key] ?? []) : a.defaultSlots;
 }
 
-export function useAvailability() {
-  const [availability, setAvailability] = useState<Availability>(EMPTY_AVAILABILITY);
+/** Availability for a single branch, with a setter that only touches that branch. */
+export function useAvailability(branch: string) {
+  const [store, setStore] = useState<AvailabilityStore>({});
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setAvailability(read());
+    setStore(readStore());
     setLoaded(true);
-    const onChange = () => setAvailability(read());
+    const onChange = () => setStore(readStore());
     window.addEventListener(EVT, onChange);
     window.addEventListener("storage", onChange);
     return () => {
@@ -77,11 +97,18 @@ export function useAvailability() {
     };
   }, []);
 
-  const save = useCallback((next: Availability) => {
-    setAvailability(next);
-    window.localStorage.setItem(KEY, JSON.stringify(next));
-    window.dispatchEvent(new Event(EVT));
-  }, []);
+  const save = useCallback(
+    (next: Availability) => {
+      setStore((prev) => {
+        const merged: AvailabilityStore = { ...prev, [branch]: next };
+        delete merged["__legacy"];
+        window.localStorage.setItem(KEY, JSON.stringify(merged));
+        window.dispatchEvent(new Event(EVT));
+        return merged;
+      });
+    },
+    [branch],
+  );
 
-  return { availability, save, loaded };
+  return { availability: branchAvailability(store, branch), save, loaded };
 }

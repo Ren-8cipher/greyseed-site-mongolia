@@ -4,6 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { LeafMark } from "@/components/Leaf";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { useLang } from "@/hooks/use-lang";
+import { branches } from "@/lib/content";
 import {
   DEFAULT_SLOTS,
   dateKey,
@@ -37,7 +38,8 @@ export const Route = createFileRoute("/admin")({
 function AdminPage() {
   const { lang } = useLang();
   const mn = lang === "mn";
-  const { availability, save, loaded } = useAvailability();
+  const [branch, setBranch] = useState<string>(branches[0]!.name);
+  const { availability, save, loaded } = useAvailability(branch);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [toast, setToast] = useState("");
 
@@ -116,6 +118,32 @@ function AdminPage() {
             {mn
               ? "Захиалга авах өдөр, цагаа энд тохируулна. Ширээ захиалах хуудас үүнийг шууд ашиглана. (Демо — энэ төхөөрөмж дээр хадгалагдана.)"
               : "Set which dates and hours accept bookings. The reservation page uses this instantly. (Demo — stored on this device.)"}
+          </p>
+
+          <div className="mt-8 grid gap-3 text-left sm:grid-cols-2">
+            {branches.map((b) => (
+              <button
+                key={b.name}
+                type="button"
+                onClick={() => setBranch(b.name)}
+                aria-pressed={branch === b.name}
+                className={`min-h-[64px] rounded-xl border px-4 py-3 transition-colors ${
+                  branch === b.name
+                    ? "border-gold bg-gold/10"
+                    : "border-cream/20 bg-white/5 hover:border-gold/40"
+                }`}
+              >
+                <span className="block text-sm font-semibold tracking-wide text-cream">
+                  {b.name}
+                </span>
+                <span className="block text-xs text-cream/60">{mn ? b.addrMn : b.addrEn}</span>
+              </button>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-cream/60">
+            {mn
+              ? "Хуваарь салбар тус бүрээр тусад нь хадгалагдана."
+              : "Hours are saved separately for each branch."}
           </p>
         </div>
       </section>
