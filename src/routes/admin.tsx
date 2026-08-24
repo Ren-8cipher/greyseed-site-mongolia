@@ -4,6 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { LeafMark } from "@/components/Leaf";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { useLang } from "@/hooks/use-lang";
+import { branches } from "@/lib/content";
 import {
   DEFAULT_SLOTS,
   dateKey,
