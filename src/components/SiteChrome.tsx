@@ -61,6 +61,7 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
   }));
   const pageItems = [
     { href: "/menu", label: L(t.nav.menu) },
+    { href: "/careers", label: L(t.nav.careers) },
     { href: "/reserve", label: L(t.hero.reserve) },
   ];
   const all = [...navItems, ...pageItems];
@@ -147,7 +148,11 @@ export function SiteFooter() {
               {L(t.footer.links)}
             </p>
             <ul className="mt-4 space-y-1">
-              {[...navItems, { href: "/menu", label: L(t.nav.menu) }].map((n) => (
+              {[
+                ...navItems,
+                { href: "/menu", label: L(t.nav.menu) },
+                { href: "/careers", label: L(t.nav.careers) },
+              ].map((n) => (
                 <li key={n.href}>
                   <a
                     href={n.href}
