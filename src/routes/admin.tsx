@@ -37,7 +37,8 @@ export const Route = createFileRoute("/admin")({
 function AdminPage() {
   const { lang } = useLang();
   const mn = lang === "mn";
-  const { availability, save, loaded } = useAvailability();
+  const [branch, setBranch] = useState<string>(branches[0]!.name);
+  const { availability, save, loaded } = useAvailability(branch);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [toast, setToast] = useState("");
 
