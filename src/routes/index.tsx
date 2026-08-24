@@ -275,6 +275,7 @@ function Index() {
               </article>
             ))}
           </div>
+          <ReviewForm mn={lang === "mn"} />
         </div>
       </section>
 
