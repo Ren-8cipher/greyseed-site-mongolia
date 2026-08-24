@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LeafMark } from "@/components/Leaf";
-import { gmailLink, mailtoLink } from "@/lib/mail";
+import { sendMail } from "@/lib/send-mail";
 
 /** "Сэтгэгдэл бичих" — collects a review and emails it to the official inbox. */
 export function ReviewForm({ mn }: { mn: boolean }) {
@@ -10,29 +10,39 @@ export function ReviewForm({ mn }: { mn: boolean }) {
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
   const label = "text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/60";
   const field =
     "mt-2 min-h-[52px] w-full rounded-xl border border-cream/20 bg-white/5 px-4 text-base text-cream outline-none transition-colors placeholder:text-cream/40 focus:border-gold";
 
-  const send = (e: React.FormEvent) => {
+  const send = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !comment.trim()) {
       setError(mn ? "Нэр болон сэтгэгдлээ бичнэ үү." : "Please add your name and comment.");
       return;
     }
     setError("");
-    const subject = `GREYSEED review — ${name.trim()} (${rating}/5)`;
-    const lines: [string, string][] = [
-      [mn ? "Нэр" : "Name", name.trim()],
-      [mn ? "Үнэлгээ" : "Rating", `${rating}/5`],
-      [mn ? "Сэтгэгдэл" : "Comment", comment.trim()],
-    ];
-    window.location.href = mailtoLink(subject, lines);
-    window.setTimeout(() => window.open(gmailLink(subject, lines), "_blank", "noopener"), 600);
-    setSent(true);
+    setSending(true);
+    try {
+      await sendMail(`GREYSEED review — ${name.trim()} (${rating}/5)`, {
+        Name: name.trim(),
+        Rating: `${rating}/5`,
+        Comment: comment.trim(),
+      });
+      setSent(true);
+    } catch {
+      setError(
+        mn
+          ? "Илгээхэд алдаа гарлаа. Дахин оролдоно уу."
+          : "Could not send right now. Please try again.",
+      );
+    } finally {
+      setSending(false);
+    }
   };
+
 
   if (!open) {
     return (
