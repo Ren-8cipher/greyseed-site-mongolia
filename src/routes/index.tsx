@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LeafDivider, LeafMark } from "@/components/Leaf";
 import { MobileBar, SiteFooter, SiteHeader } from "@/components/SiteChrome";
+import { ReviewForm } from "@/components/ReviewForm";
 import { useLang } from "@/hooks/use-lang";
 import { useReveal } from "@/hooks/use-reveal";
 import { branches, dishes, reviews, t } from "@/lib/content";
